@@ -33,7 +33,12 @@ module.exports = async function handler(req, res) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { maxOutputTokens: 2048, temperature: 0.85, responseMimeType: 'application/json' }
+          generationConfig: {
+            maxOutputTokens: 2048,
+            temperature: 0.85,
+            responseMimeType: 'application/json',
+            thinkingConfig: { thinkingBudget: 0 }
+          }
         })
       }
     );
