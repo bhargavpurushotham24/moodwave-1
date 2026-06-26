@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moodwave — Break the Loop</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap');
+:root {
+  --bg: #0c0c0f; --surface: #141418; --surface2: #1c1c22; --border: #2a2a35;
+  --green: #1DB954; --green-glow: rgba(29,185,84,0.12); --purple: #7B5EA7;
+  --amber: #F59E0B; --text: #f0f0f0; --muted: #888899;
+  --display: 'Syne', sans-serif; --body: 'Inter', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--body); min-height: 100vh; }
+body::before { content:''; position:fixed; top:-200px; left:50%; transform:translateX(-50%); width:900px; height:700px; background:radial-gradient(ellipse, rgba(29,185,84,0.05) 0%, transparent 70%); pointer-events:none; z-index:0; }
+
+header { position:relative; z-index:10; padding:18px 32px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); }
+.wordmark { font-family:var(--display); font-weight:800; font-size:20px; letter-spacing:-0.03em; }
+.wordmark span { color:var(--green); }
+.header-badge { font-size:11px; color:var(--green); background:var(--green-glow); border:1px solid rgba(29,185,84,0.3); border-radius:20px; padding:7px 16px; white-space:nowrap; }
+
+/* PROBLEM BANNER */
+.problem-banner { position:relative; z-index:10; background:linear-gradient(135deg,rgba(29,185,84,0.07),rgba(123,94,167,0.07)); border-bottom:1px solid var(--border); padding:16px 32px; display:flex; align-items:flex-start; gap:14px; }
+.problem-icon { font-size:22px; flex-shrink:0; margin-top:2px; }
+.problem-text { font-size:14px; color:var(--muted); line-height:1.6; }
+.problem-text strong { color:var(--text); display:block; margin-bottom:3px; font-size:15px; }
+.problem-shift { display:flex; gap:18px; margin-top:8px; flex-wrap:wrap; font-size:12.5px; }
+.problem-shift span.before { color:#ff8b8b; }
+.problem-shift span.after { color:var(--green); }
+.problem-shift b { color:var(--text); font-weight:600; }
+
+/* RESEARCH INSIGHTS STRIP */
+.research-strip { position:relative; z-index:10; padding:12px 32px; border-bottom:1px solid var(--border); background:var(--surface); }
+.research-strip strong { color:var(--text); font-size:13px; }
+.research-strip ul { list-style:none; display:flex; gap:24px; flex-wrap:wrap; margin-top:6px; }
+.research-strip ul li { font-size:12px; color:var(--muted); display:flex; align-items:center; gap:6px; }
+.research-strip ul li::before { content:'•'; color:var(--green); }
+
+/* HERO */
+.hero { position:relative; z-index:10; text-align:center; padding:44px 24px 28px; }
+.hero-eyebrow { display:inline-block; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--green); margin-bottom:18px; padding:6px 16px; border:1px solid rgba(29,185,84,0.3); border-radius:20px; }
+.hero h1 { font-family:var(--display); font-size:clamp(30px,5vw,56px); font-weight:800; letter-spacing:-0.04em; line-height:1.05; margin-bottom:12px; }
+.hero h1 em { font-style:normal; color:var(--green); }
+.hero p { font-size:15px; color:var(--muted); max-width:460px; margin:0 auto 24px; line-height:1.6; }
+
+/* PASSIVE BUTTON */
+.passive-btn { background:linear-gradient(135deg,#1DB954,#158a3e); color:#000; border:none; border-radius:50px; font-family:var(--display); font-size:15px; font-weight:700; padding:14px 32px; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:10px; box-shadow:0 4px 20px rgba(29,185,84,0.25); }
+.passive-btn:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(29,185,84,0.35); }
+.passive-sub { font-size:12px; color:var(--muted); margin-top:10px; }
+.passive-divider { display:flex; align-items:center; gap:16px; max-width:460px; margin:22px auto; color:var(--muted); font-size:12px; }
+.passive-divider::before,.passive-divider::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* LOOP INDICATOR */
+.loop-indicator { display:inline-flex; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:6px 16px; font-size:12px; color:var(--green); margin-bottom:24px; }
+
+/* MAIN */
+.main-section { position:relative; z-index:10; max-width:780px; margin:0 auto; padding:0 24px 40px; }
+.section-label { font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:14px; text-align:center; }
+.nl-label { font-size:12px; color:var(--muted); margin-bottom:8px; display:block; }
+.nl-input-box { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px; margin-bottom:24px; transition:border-color 0.2s; }
+.nl-input-box:focus-within { border-color:var(--green); }
+.nl-input-box textarea { width:100%; background:none; border:none; color:var(--text); font-family:var(--body); font-size:15px; line-height:1.6; resize:none; outline:none; min-height:56px; }
+.nl-input-box textarea::placeholder { color:#444; }
+.nl-examples { display:flex; flex-wrap:wrap; gap:7px; margin-top:12px; padding-top:12px; border-top:1px solid var(--border); }
+.nl-example { font-size:12px; color:var(--muted); background:var(--surface2); border:1px solid var(--border); border-radius:20px; padding:4px 12px; cursor:pointer; transition:all 0.15s; }
+.nl-example:hover { border-color:var(--green); color:var(--text); }
+.or-row { display:flex; align-items:center; gap:12px; margin-bottom:18px; color:var(--muted); font-size:12px; }
+.or-row::before,.or-row::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* MOOD GRID */
+.mood-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:24px; }
+.mood-btn { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 10px; cursor:pointer; transition:all 0.2s; text-align:center; display:flex; flex-direction:column; align-items:center; gap:7px; }
+.mood-btn:hover { border-color:var(--green); background:var(--green-glow); transform:translateY(-2px); }
+.mood-btn.selected { border-color:var(--green); background:var(--green-glow); }
+.mood-emoji { font-size:22px; } .mood-name { font-family:var(--display); font-size:12px; font-weight:600; } .mood-desc { font-size:10px; color:var(--muted); }
+
+/* CONTEXT */
+.context-row { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:24px; }
+.ctx-btn { background:var(--surface); border:1px solid var(--border); border-radius:20px; color:var(--muted); font-size:13px; padding:7px 16px; cursor:pointer; transition:all 0.2s; font-family:var(--body); }
+.ctx-btn:hover { border-color:var(--purple); color:var(--text); }
+.ctx-btn.selected { border-color:var(--purple); background:rgba(123,94,167,0.15); color:var(--text); }
+
+/* SLIDER */
+.slider-section { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:18px 20px; margin-bottom:24px; }
+.slider-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.slider-title { font-size:13px; font-weight:500; }
+.slider-value { font-size:12px; color:var(--green); font-weight:600; }
+.loop-badge { font-size:11px; margin-top:8px; color:var(--green); display:flex; align-items:center; gap:6px; }
+input[type="range"] { width:100%; -webkit-appearance:none; height:4px; background:var(--border); border-radius:2px; outline:none; margin-bottom:8px; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:var(--green); cursor:pointer; }
+.slider-labels { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); }
+
+/* DISCOVER BTN */
+.discover-btn { width:100%; background:var(--green); color:#000; border:none; border-radius:12px; font-family:var(--display); font-size:16px; font-weight:700; padding:17px; cursor:pointer; transition:all 0.2s; }
+.discover-btn:hover { background:#1ed760; transform:translateY(-1px); box-shadow:0 8px 24px rgba(29,185,84,0.3); }
+.discover-btn:disabled { background:#2a2a2a; color:#555; cursor:not-allowed; transform:none; box-shadow:none; }
+
+/* LOADING */
+.loading-section { display:none; max-width:780px; margin:0 auto; padding:0 24px 40px; text-align:center; }
+.loading-section.active { display:block; }
+.loading-animation { display:flex; justify-content:center; gap:6px; margin-bottom:20px; }
+.dot { width:8px; height:8px; background:var(--green); border-radius:50%; animation:bounce 1.2s infinite; }
+.dot:nth-child(2){animation-delay:0.2s} .dot:nth-child(3){animation-delay:0.4s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0);opacity:0.4}40%{transform:translateY(-12px);opacity:1}}
+.loading-text { font-size:14px; color:var(--muted); margin-bottom:6px; }
+.loading-sub { font-size:12px; color:#555; }
+
+/* RESULTS */
+.results-section { display:none; max-width:780px; margin:0 auto; padding:0 24px 64px; }
+.results-section.active { display:block; }
+.results-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border); gap:12px; }
+.results-title { font-family:var(--display); font-size:22px; font-weight:700; letter-spacing:-0.02em; margin-bottom:4px; }
+.results-meta { font-size:12px; color:var(--muted); }
+.discovery-moment { font-size:12px; color:var(--green); margin-top:6px; }
+.continue-row { margin-top:24px; padding-top:20px; border-top:1px solid var(--border); text-align:center; }
+.novelty-badge { display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--green); background:var(--green-glow); border:1px solid rgba(29,185,84,0.3); border-radius:20px; padding:4px 12px; margin-top:6px; }
+.reset-btn { background:none; border:1px solid var(--border); color:var(--muted); border-radius:8px; font-size:12px; padding:7px 14px; cursor:pointer; transition:all 0.2s; font-family:var(--body); white-space:nowrap; flex-shrink:0; }
+.reset-btn:hover { border-color:var(--text); color:var(--text); }
+
+/* AI REASONING */
+.ai-reasoning-box { background:var(--surface); border:1px solid rgba(29,185,84,0.3); border-radius:12px; padding:16px 20px; margin-bottom:20px; display:flex; gap:12px; align-items:flex-start; }
+.ai-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
+.ai-reasoning-text { font-size:14px; color:var(--muted); line-height:1.6; }
+.ai-reasoning-text strong { color:var(--green); }
+
+/* SONG CARDS */
+.songs-list { display:flex; flex-direction:column; gap:10px; }
+.song-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px 20px; transition:border-color 0.2s; animation:fadeUp 0.4s ease both; }
+.song-card:hover { border-color:rgba(29,185,84,0.4); }
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.song-card:nth-child(2){animation-delay:0.07s}.song-card:nth-child(3){animation-delay:0.14s}
+.song-card:nth-child(4){animation-delay:0.21s}.song-card:nth-child(5){animation-delay:0.28s}
+.song-card:nth-child(6){animation-delay:0.35s}.song-card:nth-child(7){animation-delay:0.42s}
+.song-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:10px; gap:12px; }
+.song-info { flex:1; }
+.song-title { font-family:var(--display); font-size:16px; font-weight:700; letter-spacing:-0.02em; margin-bottom:2px; }
+.song-artist { font-size:13px; color:var(--muted); }
+.song-num { font-family:var(--display); font-size:20px; font-weight:800; color:var(--border); flex-shrink:0; }
+.why-row { background:var(--surface2); border-radius:8px; padding:10px 14px; margin-bottom:12px; display:flex; gap:8px; align-items:flex-start; }
+.why-label { font-size:10px; color:var(--green); font-weight:600; letter-spacing:0.08em; text-transform:uppercase; white-space:nowrap; margin-top:2px; }
+.why-text { font-size:13px; color:var(--muted); line-height:1.5; }
+.song-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+.tag { font-size:11px; padding:3px 10px; border-radius:20px; border:1px solid var(--border); color:var(--muted); }
+.tag.mood{border-color:rgba(29,185,84,0.4);color:var(--green)} .tag.vibe{border-color:rgba(123,94,167,0.4);color:#a78bdb} .tag.energy{border-color:rgba(245,158,11,0.3);color:var(--amber)}
+.feedback-row { display:flex; align-items:center; gap:8px; padding-top:12px; border-top:1px solid var(--border); flex-wrap:wrap; }
+.feedback-label { font-size:11px; color:var(--muted); margin-right:4px; }
+.fb-btn { background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--muted); font-size:13px; padding:5px 12px; cursor:pointer; transition:all 0.15s; font-family:var(--body); display:flex; align-items:center; gap:4px; }
+.fb-btn:hover { border-color:var(--green); color:var(--text); }
+.fb-btn.active-like{border-color:var(--green);background:var(--green-glow);color:var(--green)}
+.fb-btn.active-skip{border-color:#ef4444;background:rgba(239,68,68,0.1);color:#ef4444}
+.fb-btn.active-neutral{border-color:var(--amber);background:rgba(245,158,11,0.1);color:var(--amber)}
+.fb-text { font-size:11px; }
+.spotify-link { margin-left:auto; display:inline-flex; align-items:center; gap:5px; font-size:12px; color:var(--green); text-decoration:none; opacity:0.8; transition:opacity 0.2s; }
+.spotify-link:hover { opacity:1; }
+
+/* LEARNING BOX */
+.feedback-summary { display:none; background:var(--surface); border:1px solid rgba(29,185,84,0.3); border-radius:12px; padding:16px 20px; margin-top:20px; font-size:13px; color:var(--muted); line-height:1.6; }
+.feedback-summary.active { display:block; }
+.feedback-summary strong { color:var(--green); }
+
+.error-box { display:none; background:#1a0808; border:1px solid #5a1a1a; border-radius:10px; padding:14px 18px; font-size:13px; color:#ff6b6b; margin-bottom:16px; }
+.error-box.active { display:block; }
+@media(max-width:600px){.mood-grid{grid-template-columns:repeat(2,1fr)} header{flex-direction:column;gap:12px;align-items:flex-start} .research-strip ul{flex-direction:column;gap:8px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wordmark">mood<span>wave</span></div>
+  <div class="header-badge">⚡ Powered by Gemini — free to run</div>
+</header>
+
+<!-- PROBLEM BANNER -->
+<div class="problem-banner">
+  <div class="problem-icon">🔁</div>
+  <div class="problem-text">
+    <strong>The Problem Moodwave Solves</strong>
+    Users are stuck in repetitive listening loops — 80% of Spotify listening comes from familiar playlists. Discovery feels like effort, so users default to the same songs every day.
+    <div class="problem-shift">
+      <span class="before"><b>Before:</b> same playlist on repeat, on autopilot</span>
+      <span class="after"><b>After:</b> a new, fitting song every time, with zero scrolling</span>
+    </div>
+  </div>
+</div>
+
+<!-- RESEARCH INSIGHTS STRIP -->
+<div class="research-strip">
+  <strong>What we learned from 6 user interviews:</strong>
+  <ul>
+    <li>People default to the same playlists every day — it becomes automatic</li>
+    <li>Discovery feels like effort, so users avoid it and go to Instagram/YouTube instead</li>
+    <li>Recommendations feel repetitive — users have stopped trusting Discover Weekly</li>
+  </ul>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">AI-Powered Music Discovery · Built from User Research</div>
+  <div class="loop-indicator" id="tasteBadge" style="display:none;"></div>
+  <h1>Break the loop.<br><em>Discover right now.</em></h1>
+  <p>Tell Moodwave how you feel in your own words — or just hit play. Get songs you've never heard, chosen for this exact moment, not your history.</p>
+
+  <button class="passive-btn" onclick="passiveDiscover()">
+    <span>🎲</span> Surprise me — just play something new
+  </button>
+  <p class="passive-sub">No decisions. No scrolling. Just press play and discover.</p>
+
+  <div class="passive-divider">or describe your mood below</div>
+</div>
+
+<div class="main-section">
+  <span class="nl-label">Describe how you're feeling right now (AI understands natural language — be as specific as you want)</span>
+  <div class="nl-input-box">
+    <textarea id="nlInput" rows="2" placeholder='"Late night, slightly sad but not too heavy" or "Gym energy but not too aggressive"...'></textarea>
+    <div class="nl-examples">
+      <span class="nl-example" onclick="setExample(this)">Late night chill but slightly sad</span>
+      <span class="nl-example" onclick="setExample(this)">Gym but not too aggressive</span>
+      <span class="nl-example" onclick="setExample(this)">Focused deep work, no lyrics</span>
+      <span class="nl-example" onclick="setExample(this)">Happy Sunday morning vibes</span>
+      <span class="nl-example" onclick="setExample(this)">Heartbreak but make it beautiful</span>
+      <span class="nl-example" onclick="setExample(this)">Need something totally new</span>
+    </div>
+  </div>
+
+  <div class="or-row">or pick a mood</div>
+  <div class="section-label">How are you feeling?</div>
+  <div class="mood-grid">
+    <button class="mood-btn" onclick="selectMood(this,'energized')"><div class="mood-emoji">⚡</div><div class="mood-name">Energized</div><div class="mood-desc">Ready to move</div></button>
+    <button class="mood-btn" onclick="selectMood(this,'calm')"><div class="mood-emoji">🌊</div><div class="mood-name">Calm</div><div class="mood-desc">Relaxed, at peace</div></button>
+    <button class="mood-btn" onclick="selectMood(this,'focused')"><div class="mood-emoji">🎯</div><div class="mood-name">Focused</div><div class="mood-desc">Deep work mode</div></button>
+    <button class="mood-btn" onclick="selectMood(this,'melancholic')"><div class="mood-emoji">🌧️</div><div class="mood-name">Melancholic</div><div class="mood-desc">Reflective, bittersweet</div></button>
+    <button class="mood-btn" onclick="selectMood(this,'happy')"><div class="mood-emoji">☀️</div><div class="mood-name">Happy</div><div class="mood-desc">Good vibes</div></button>
+    <button class="mood-btn" onclick="selectMood(this,'nostalgic')"><div class="mood-emoji">🎞️</div><div class="mood-name">Nostalgic</div><div class="mood-desc">Warm memories</div></button>
+    <button class="mood-btn" onclick="selectMood(this,'restless')"><div class="mood-emoji">🌀</div><div class="mood-name">Restless</div><div class="mood-desc">Can't settle</div></button>
+    <button class="mood-btn" onclick="selectMood(this,'social')"><div class="mood-emoji">🎉</div><div class="mood-name">Social</div><div class="mood-desc">With people</div></button>
+  </div>
+
+  <div class="section-label">What are you doing?</div>
+  <div class="context-row">
+    <button class="ctx-btn" onclick="selectCtx(this,'working out')">🏋️ Working out</button>
+    <button class="ctx-btn" onclick="selectCtx(this,'commuting')">🚇 Commuting</button>
+    <button class="ctx-btn" onclick="selectCtx(this,'studying or working')">💻 Studying</button>
+    <button class="ctx-btn" onclick="selectCtx(this,'cooking')">🍳 Cooking</button>
+    <button class="ctx-btn" onclick="selectCtx(this,'winding down before sleep')">🌙 Winding down</button>
+    <button class="ctx-btn" onclick="selectCtx(this,'just vibing')">✨ Just vibing</button>
+  </div>
+
+  <div class="slider-section">
+    <div class="slider-header">
+      <span class="slider-title">How adventurous do you feel today?</span>
+      <span class="slider-value" id="sliderLabel">Balanced discovery</span>
+    </div>
+    <input type="range" id="adventureSlider" min="1" max="5" value="3" oninput="updateSlider(this.value)" />
+    <div class="slider-labels"><span>Keep it familiar</span><span>Surprise me completely</span></div>
+    <div class="loop-badge" id="loopBadge">🔁 Balanced discovery</div>
+  </div>
+
+  <div class="error-box" id="errorBox"></div>
+  <button class="discover-btn" id="discoverBtn" onclick="discover()">Break my loop →</button>
+</div>
+
+<div class="loading-section" id="loadingSection">
+  <div class="loading-animation"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+  <div class="loading-text" id="loadingText">Understanding your mood...</div>
+  <div class="loading-sub">AI is analyzing your emotional context and pushing you beyond your usual taste</div>
+</div>
+
+<div class="results-section" id="resultsSection">
+  <div class="results-header">
+    <div>
+      <div class="results-title" id="resultsTitle">Your discovery playlist</div>
+      <div class="results-meta" id="resultsMeta"></div>
+      <div class="discovery-moment" id="discoveryMoment">✨ This is your discovery moment — something you wouldn't have found on your own</div>
+      <div class="novelty-badge" id="noveltyBadge">🔁 Loop broken</div>
+    </div>
+    <button class="reset-btn" onclick="resetAll()">Try again</button>
+  </div>
+  <div class="ai-reasoning-box">
+    <div class="ai-icon">🧠</div>
+    <div class="ai-reasoning-text" id="aiReasoning"></div>
+  </div>
+  <div class="songs-list" id="songsList"></div>
+  <div class="continue-row">
+    <button class="passive-btn" onclick="continueSession()">▶️ Keep the vibe going</button>
+    <p class="passive-sub">Moodwave keeps adapting as you listen — same vibe, new songs</p>
+  </div>
+  <div class="feedback-summary" id="feedbackSummary"></div>
+</div>
+
+<script>
+let selectedMood=null, selectedCtx=null, feedbackData={}, lastMoodDescription='';
+let tasteProfile={likes:0,neutral:0,skips:0};
+
+function loadTasteProfile(){
+  try{
+    const saved=localStorage.getItem('tasteProfile');
+    if(saved) tasteProfile=JSON.parse(saved);
+  }catch(e){
+    // no saved profile yet on this device — that's fine, start fresh
+  }
+  renderTasteBadge();
+}
+
+function saveTasteProfile(){
+  try{
+    localStorage.setItem('tasteProfile',JSON.stringify(tasteProfile));
+  }catch(e){
+    console.error('Could not persist taste profile',e);
+  }
+}
+
+function renderTasteBadge(){
+  const total=tasteProfile.likes+tasteProfile.neutral+tasteProfile.skips;
+  const badge=document.getElementById('tasteBadge');
+  if(total===0){ badge.style.display='none'; return; }
+  const pct=Math.round((tasteProfile.likes/total)*100);
+  badge.style.display='inline-flex';
+  badge.textContent=`🧠 Remembers you — ${pct}% adoption across ${total} past picks`;
+}
+loadTasteProfile();
+
+const sliderLabels={1:'Very familiar — safe zone',2:'Mostly familiar with small surprises',3:'Balanced discovery',4:'Lean towards new discoveries',5:'Surprise me completely'};
+const loopLabels={1:'🔁 Safe zone — staying close to your usual',2:'🔁 Safe zone with small nudges',3:'🔁 Balanced discovery',4:'✅ Loop breaking — high novelty mode',5:'🔥 Loop completely broken — max discovery'};
+const noveltyLabels={1:'Safe zone',2:'Small nudges',3:'Balanced discovery',4:'High novelty mode',5:'Loop completely broken'};
+
+function updateSlider(v){
+  document.getElementById('sliderLabel').textContent=sliderLabels[v];
+  document.getElementById('loopBadge').textContent=loopLabels[v];
+}
+
+function selectMood(btn,mood){
+  document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected'); selectedMood=mood;
+  document.getElementById('nlInput').value='';
+}
+function selectCtx(btn,ctx){
+  document.querySelectorAll('.ctx-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected'); selectedCtx=ctx;
+}
+function setExample(el){
+  document.getElementById('nlInput').value=el.textContent;
+  document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));
+  selectedMood=null;
+}
+function showError(msg){const b=document.getElementById('errorBox');b.textContent=msg;b.classList.add('active');}
+function hideError(){document.getElementById('errorBox').classList.remove('active');}
+
+async function callAI(prompt){
+  const res=await fetch('/api/discover',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({prompt})
+  });
+  if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error||'API error');}
+  const data=await res.json();
+  return data.text;
+}
+
+async function passiveDiscover(){
+  selectedCtx='just vibing';
+  document.getElementById('adventureSlider').value=5; updateSlider(5);
+  await runDiscovery('Surprise me completely — I want something I have never heard before. No preferences, maximum novelty.');
+}
+
+async function discover(){
+  hideError();
+  const nlInput=document.getElementById('nlInput').value.trim();
+  if(!nlInput&&!selectedMood) return showError('Please describe your mood or select one above.');
+  if(!selectedCtx) return showError('Please select what you\'re doing.');
+  await runDiscovery(nlInput||selectedMood);
+}
+
+async function continueSession(){
+  await runDiscovery(lastMoodDescription+' — keep this exact emotional vibe going, but pick 7 different songs than last time, no repeats.');
+}
+
+async function runDiscovery(moodDescription){
+  hideError();
+  lastMoodDescription=moodDescription;
+  const adventure=parseInt(document.getElementById('adventureSlider').value);
+  const ctx=selectedCtx||'general listening';
+  const btn=document.getElementById('discoverBtn');
+  btn.disabled=true;
+  document.querySelector('.main-section').style.cssText='opacity:0.4;pointer-events:none';
+  document.getElementById('loadingSection').classList.add('active');
+  document.getElementById('resultsSection').classList.remove('active');
+
+  const steps=['Understanding your mood...','Interpreting emotional nuance...','Finding songs beyond your loop...','Almost ready...'];
+  let step=0;
+  const interval=setInterval(()=>{if(step<steps.length)document.getElementById('loadingText').textContent=steps[step++];},2200);
+
+  const familiarityGuide = adventure<=2
+    ? 'Mix mostly familiar-style songs (same genre/energy) with 1-2 gentle new discoveries. Do not go too far from what feels safe.'
+    : adventure>=4
+    ? 'Prioritize completely unknown artists and unexpected genre crossovers. Push the user well outside their usual taste.'
+    : 'Balance familiar sonic territory with genuinely new artists and sounds.';
+
+  const pastTotal=tasteProfile.likes+tasteProfile.neutral+tasteProfile.skips;
+  const memoryNote = pastTotal>0
+    ? `This is a returning user. Across past sessions on this device they liked ${tasteProfile.likes}, were neutral on ${tasteProfile.neutral}, and skipped ${tasteProfile.skips} recommendations. Use that to calibrate how far to push novelty, but still surface genuinely new songs.`
+    : '';
+
+  const prompt=`You are an adaptive music discovery AI designed to break users out of repetitive listening loops.
+
+Your job is NOT just to recommend songs. You must:
+1. Interpret emotional nuance from natural language — understand the subtlety behind what the user describes
+2. Push the user slightly outside their usual taste based on discovery level
+3. Balance familiarity vs novelty intelligently
+4. Think like a human DJ who deeply understands mood, not a playlist generator
+
+User mood/feeling: "${moodDescription}"
+Activity context: ${ctx}
+Discovery level: ${adventure}/5
+
+Familiarity guidance: ${familiarityGuide}
+${memoryNote}
+
+Critical rules:
+- Recommend REAL songs that actually exist
+- Avoid top 40 hits and overplayed mainstream tracks
+- Every song must genuinely reflect the emotional texture described
+- Be specific — mention tempo, key feel, lyrical theme, sonic texture in your why
+
+Return ONLY valid JSON, no markdown fences:
+{
+  "playlist_title": "4-5 word evocative title",
+  "ai_reasoning": "2 sentences that feel human and warm. Describe the emotional texture you detected and what sonic qualities you searched for. Example tone: 'This feels like a late-night reflective mood with soft emotional undertones. I picked songs with low tempo, warm textures, and introspective lyrics to match that feeling.'",
+  "songs": [
+    {
+      "title": "Song Title",
+      "artist": "Artist Name",
+      "why_this_song": "1-2 sentences: why this specific song fits THIS mood. Mention tempo, key, lyrical theme, or sonic quality. Feel human not robotic.",
+      "tags": ["mood tag", "energy level", "genre"]
+    }
+  ]
+}
+
+Return exactly 7 songs. Output ONLY the raw JSON object — no preamble, no explanation, no markdown code fences, nothing before or after it.`;
+
+  try{
+    const raw=await callAI(prompt);
+    clearInterval(interval);
+    const clean=raw.replace(/```json|```/g,'').trim();
+    const result=JSON.parse(clean);
+    renderResults(result,moodDescription,ctx,adventure);
+  }catch(err){
+    clearInterval(interval);
+    document.getElementById('loadingSection').classList.remove('active');
+    document.querySelector('.main-section').style.cssText='';
+    showError('Something went wrong: '+err.message);
+    btn.disabled=false;
+  }
+}
+
+function renderResults(data,moodDesc,ctx,adventure){
+  document.getElementById('loadingSection').classList.remove('active');
+  feedbackData={};
+  document.getElementById('resultsTitle').textContent=data.playlist_title||'Your discovery';
+  document.getElementById('resultsMeta').textContent=`"${moodDesc}" · ${ctx}`;
+  document.getElementById('noveltyBadge').textContent='🔁 '+noveltyLabels[adventure];
+  document.getElementById('aiReasoning').innerHTML=`<strong>Why this feels right for you:</strong> ${data.ai_reasoning}`;
+
+  const list=document.getElementById('songsList');
+  list.innerHTML=(data.songs||[]).map((song,i)=>`
+    <div class="song-card" id="card-${i}">
+      <div class="song-top">
+        <div class="song-info">
+          <div class="song-title">${song.title}</div>
+          <div class="song-artist">${song.artist}</div>
+        </div>
+        <div class="song-num">0${i+1}</div>
+      </div>
+      <div class="why-row">
+        <span class="why-label">Why this?</span>
+        <span class="why-text">${song.why_this_song}</span>
+      </div>
+      <div class="song-tags">
+        ${(song.tags||[]).map((t,ti)=>`<span class="tag ${ti===0?'mood':ti===1?'energy':'vibe'}">${t}</span>`).join('')}
+      </div>
+      <div class="feedback-row">
+        <span class="feedback-label">Good pick?</span>
+        <button class="fb-btn" onclick="giveFeedback(${i},'like',this)">👍 <span class="fb-text">Yes</span></button>
+        <button class="fb-btn" onclick="giveFeedback(${i},'neutral',this)">😐 <span class="fb-text">Okay</span></button>
+        <button class="fb-btn" onclick="giveFeedback(${i},'skip',this)">👎 <span class="fb-text">Not for me</span></button>
+        <a class="spotify-link" href="https://open.spotify.com/search/${encodeURIComponent(song.title+' '+song.artist)}" target="_blank">↗ Find on Spotify</a>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('resultsSection').classList.add('active');
+  document.getElementById('resultsSection').scrollIntoView({behavior:'smooth'});
+  document.getElementById('discoverBtn').disabled=false;
+  document.querySelector('.main-section').style.cssText='';
+}
+
+function giveFeedback(index,type,btn){
+  feedbackData[index]=type;
+  tasteProfile[type==='like'?'likes':type==='skip'?'skips':'neutral']++;
+  saveTasteProfile();
+  renderTasteBadge();
+  const card=document.getElementById(`card-${index}`);
+  card.querySelectorAll('.fb-btn').forEach(b=>b.classList.remove('active-like','active-skip','active-neutral'));
+  btn.classList.add(type==='like'?'active-like':type==='skip'?'active-skip':'active-neutral');
+  const count=Object.keys(feedbackData).length;
+  if(count>=3){
+    const likes=Object.values(feedbackData).filter(v=>v==='like').length;
+    const skips=Object.values(feedbackData).filter(v=>v==='skip').length;
+    const summary=document.getElementById('feedbackSummary');
+    summary.classList.add('active');
+    const direction=likes>skips?'calmer, more melodic tracks in this emotional space':'slightly different sonic territory — perhaps a different energy or genre angle';
+    summary.innerHTML=`<strong>🧠 Learning your taste...</strong><br>I'm noticing you prefer ${direction}. Next recommendations will adapt to this. In production, this feedback loop runs continuously — the more you use Moodwave, the better it understands not just what you like, but what you like <em>right now</em>.`;
+  }
+}
+
+function resetAll(){
+  document.getElementById('resultsSection').classList.remove('active');
+  document.getElementById('loadingSection').classList.remove('active');
+  document.getElementById('feedbackSummary').classList.remove('active');
+  document.querySelectorAll('.mood-btn,.ctx-btn').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('nlInput').value='';
+  selectedMood=null; selectedCtx=null; feedbackData={};
+  hideError();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
